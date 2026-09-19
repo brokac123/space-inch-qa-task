@@ -1,0 +1,8 @@
+{
+  "nonExistentRateIds": [99999, 0, -1, "abc"],
+  "nonExistentCustomerId": 99999,
+  "invalidQuotePayloads": [
+    { "bugId": "BUG-02", "description": "an empty payload", "payload": {} },
+    { "bugId": "BUG-03", "description": "wrong data types", "payload": { "userId": "notanumber", "title": 123, "body": true } }
+  ]
+}
