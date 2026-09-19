@@ -1,0 +1,7 @@
+{
+  "existingRates": [
+    { "id": 1, "customerId": 1 },
+    { "id": 50, "customerId": 5 },
+    { "id": 100, "customerId": 10 }
+  ]
+}
