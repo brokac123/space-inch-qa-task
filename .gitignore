@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Environment (real values stay local; .env.example is committed)
+.env
+
+# Cypress artifacts
+cypress/reports/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# Local exploratory Postman collection (not part of the submission)
+postman/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
