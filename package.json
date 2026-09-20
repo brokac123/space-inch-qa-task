@@ -1,25 +1,13 @@
 {
   "name": "space-inch-qa-task",
   "version": "1.0.0",
+  "private": true,
   "description": "API test suite for the Global Shipping Rate Integrator (GSRI) - Space Inch QA technical task",
   "scripts": {
     "test": "cypress run",
-    "test:headed": "cypress run --headed",
     "cy:open": "cypress open",
     "typecheck": "tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/brokac123/space-inch-qa-task.git"
-  },
-  "keywords": [],
-  "author": "Luka Bakula",
-  "license": "MIT",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/brokac123/space-inch-qa-task/issues"
-  },
-  "homepage": "https://github.com/brokac123/space-inch-qa-task#readme",
   "devDependencies": {
     "@types/node": "^26.6.2",
     "ajv": "^8.20.0",
