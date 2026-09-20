@@ -18,6 +18,7 @@ export default defineConfig({
     reportDir: 'cypress/reports',
     reportPageTitle: 'GSRI API Test Report',
     charts: true,
+    saveJson: true, // machine-readable results, used to build the CI job summary
     embeddedScreenshots: false,
     inlineAssets: true, // single self-contained HTML file, easy to share as a CI artifact
   },
