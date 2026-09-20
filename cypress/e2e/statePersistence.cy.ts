@@ -12,14 +12,17 @@ describe('Shipping Rates Service - POST /posts (create shipping quote)', () => {
           expect(headers.location, 'Location header').to.match(new RegExp(`/posts/${created.id}$`));
         });
       });
+    });
+  });
 
-      it('assigns an id that does not collide with existing rates', () => {
-        shippingRatesService.getAllRates().then(({ body: existingRates }) => {
-          const highestExistingId = Math.max(...existingRates.map((rate) => rate.id));
+  // Runs once: the assigned id does not depend on the carrier, so repeating it per payload adds nothing.
+  it('assigns an id that does not collide with existing rates', () => {
+    const [{ quote }] = newQuotes;
 
-          shippingRatesService.createQuote(quote).its('body.id').should('be.greaterThan', highestExistingId);
-        });
-      });
+    shippingRatesService.getAllRates().then(({ body: existingRates }) => {
+      const highestExistingId = Math.max(...existingRates.map((rate) => rate.id));
+
+      shippingRatesService.createQuote(quote).its('body.id').should('be.greaterThan', highestExistingId);
     });
   });
 
