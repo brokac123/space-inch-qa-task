@@ -9,13 +9,6 @@ API test suite for the **Global Shipping Rate Integrator (GSRI)** - Space Inch t
 **At a glance:** 4 spec files and 30 tests covering functional validation, state persistence, contract validation
 and negative scenarios.
 
-| Where to look first | |
-| --- | --- |
-| Test results without installing anything | the [live report](https://brokac123.github.io/space-inch-qa-task/) or any run in [Actions](https://github.com/brokac123/space-inch-qa-task/actions) |
-| How the suite is built | `cypress/services/` (Service Objects) and `cypress/support/commands.ts` (schema validation) |
-| What is covered | [Coverage](#coverage) - one spec file per task requirement |
-| Defects found in the API | [Findings](#findings) |
-
 The suite runs against JSONPlaceholder, which stands in for two services:
 
 | Endpoint | Represents | Domain model |
@@ -23,14 +16,14 @@ The suite runs against JSONPlaceholder, which stands in for two services:
 | `/posts` | Shipping Rates Service | `ShippingRate` |
 | `/users` | Customer Profile Service | `CustomerProfile` |
 
-The test code speaks the shipping domain (`getRate`, `createQuote`, `getRatesByCustomer`), so the specs stay
-readable and the backend could be swapped without touching them.
+The test code speaks the shipping domain (`getRate`, `createQuote`, `getRatesByCustomer`) rather than
+JSONPlaceholder's.
 
 ---
 
 ## Quick start
 
-Requirements: **Node.js 20+**.
+Requirements: **Node.js 20 or newer**; developed and verified on Node 24, which is also what CI runs.
 
 ```bash
 git clone https://github.com/brokac123/space-inch-qa-task.git
@@ -102,7 +95,7 @@ scripts/ciSummary.js        builds the GitHub Actions job summary
 
 | Choice | Reason |
 | --- | --- |
-| **Cypress + TypeScript** | my daily stack; `cy.request()` covers API testing, and one framework can later cover UI and API in a single suite and report. TypeScript gives typed responses and catches mistakes before a run. |
+| **Cypress + TypeScript** | the stack I use daily, so I can maintain and extend it confidently; `cy.request()` covers API testing, and TypeScript gives typed responses and catches mistakes before a run. |
 | **Service Object pattern** | each service owns its endpoint knowledge, while shared HTTP behaviour (request options, URL building, status handling) is centralised in `BaseService`. Specs call business methods and never build URLs. |
 | **Ajv + JSON Schema** | schema validation is the industry standard for contract checks; `allErrors` reports every violation at once and the custom command turns them into readable assertions. |
 | **mochawesome** | self-contained HTML report with charts, easy to publish as a CI artifact and to GitHub Pages. |
@@ -126,8 +119,8 @@ Extending coverage usually means adding data, not code - BUG-04 below was added 
 | --- | --- | --- |
 | 1. Functional validation (`GET /posts/{id}`) | `functionalValidation.cy.ts` | rates 1 / 50 / 100 from a fixture; each rate's `userId` resolved against `/users`; all 100 rates cross-checked for orphans in 2 requests |
 | 1. Bonus (username initial) | `functionalValidation.cy.ts` | the letter comes from config, matching is case-insensitive, several matches are supported, and no match fails with a clear message |
-| 2. State persistence (`POST /posts`) | `statePersistence.cy.ts` | 3 carrier payloads; 201 + echoed payload; `Location` header matches the new id; assigned id cannot collide with existing rates |
-| 2. Bonus (stored data) | `statePersistence.cy.ts` | see the persistence assumption below |
+| 2. State persistence (`POST /posts`) | `statePersistence.cy.ts` | 3 carrier payloads, each verified for `201`, the echoed payload and a matching `Location` header; one further test checks the assigned id cannot collide with existing rates |
+| 2. Bonus (stored data) | `statePersistence.cy.ts` | the POST response is verified to echo the sent quote plus a new id, then the follow-up `GET` asserts the mock's real `404` (see assumption 1) |
 | 3. Contract / schema | `contractValidation.cy.ts` | single, list, filtered list and POST response for rates; single and list for customers; status, `Content-Type` and schema in one check |
 | 4. Negative testing | `negativeTesting.cy.ts` | ids `99999`, `0`, `-1`, `abc` and an unknown customer; plus the known bugs below |
 
@@ -157,8 +150,8 @@ Extending coverage usually means adding data, not code - BUG-04 below was added 
 3. **No authentication.** The API needs no credentials, so none are stored anywhere. With a real service the token
    would come from a repository secret and be read with `cy.env()` (for sensitive values) rather than
    `Cypress.expose()`, which is only used here for the non-sensitive name initial.
-4. **Fixture data matches the live dataset** (100 rates, 10 customers, 10 rates each). Verified when the fixtures
-   were written; the "every rate maps to an existing customer" test would catch a change.
+4. **Fixture data matches the live dataset** (100 rates, 10 customers, 10 rates each), verified against the live
+   API; the "every rate maps to an existing customer" test would catch a change.
 5. **Known bugs are asserted as they behave today** (see Findings) so the pipeline reflects reality and stays green.
    When a bug is fixed its test fails, which is the signal to flip it to the correct expectation.
 
