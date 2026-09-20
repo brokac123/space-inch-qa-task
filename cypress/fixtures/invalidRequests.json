@@ -3,6 +3,11 @@
   "nonExistentCustomerId": 99999,
   "invalidQuotePayloads": [
     { "bugId": "BUG-02", "description": "an empty payload", "payload": {} },
-    { "bugId": "BUG-03", "description": "wrong data types", "payload": { "userId": "notanumber", "title": 123, "body": true } }
+    { "bugId": "BUG-03", "description": "wrong data types", "payload": { "userId": "notanumber", "title": 123, "body": true } },
+    {
+      "bugId": "BUG-04",
+      "description": "a quote for a non-existent customer",
+      "payload": { "userId": 99999, "title": "DHL Express: Zagreb -> Berlin", "body": "2.5 kg, 24.90 EUR" }
+    }
   ]
 }
